@@ -5,13 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import sim.coder.fragments.Model.Crime
 import sim.coder.fragments.Model.CrimeListViewModel
 import sim.coder.fragments.R
 import java.text.DateFormat
@@ -36,7 +36,7 @@ class CrimeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
-        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view) as RecyclerView
+        crimeRecyclerView = view.findViewById(R.id.crime_list) as RecyclerView
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
         updateUI()
 
@@ -49,16 +49,15 @@ class CrimeListFragment : Fragment() {
         adapter = CrimeAdapter (crimes)
         crimeRecyclerView .adapter = adapter
     }
-    abstract open  class CrimeHolder(view: View) : RecyclerView.ViewHolder(view){
-        abstract open fun bind(item:Crime)
+        abstract open  class CrimeHolder(view: View) : RecyclerView.ViewHolder(view){
+        abstract open fun bind(item: Crime)
 
     }
     private inner class NormalCrimeHolder(view: View) :  CrimeHolder(view),
         View.OnClickListener {
         private lateinit var crime: Crime
-        private val solvedImageView: ImageView = itemView.findViewById(R.id.crime_solved)
-        private val titleTextView: TextView = itemView.findViewById(R.id.requiredcrime_title)
-        private val dateTextView: TextView = itemView.findViewById(R.id.requiredcrime_date)
+        private val titleCrime: TextView = itemView.findViewById<TextView>(R.id.title_require)
+        private val dateCrime: TextView = itemView.findViewById<TextView>(R.id.date_require)
 
         init {
             itemView.setOnClickListener(this)
@@ -69,26 +68,26 @@ class CrimeListFragment : Fragment() {
         }
         override fun bind(crime: Crime) {
             this.crime = crime
-            titleTextView.text = this.crime.title
-            dateTextView.text = DateFormat.getDateInstance(DateFormat.FULL).format(this.crime.date).toString()
-            solvedImageView.visibility=if(crime.isSolved){
-                View.VISIBLE
-            }
-            else
-                View.GONE
+            titleCrime.text = this.crime.title
+            dateCrime.text = DateFormat.getDateInstance(DateFormat.FULL).format(this.crime.date).toString()
+//            solvedImageView.visibility=if(crime.isSolved){
+//                View.VISIBLE
+//            }
+//            else
+//                View.GONE
         }
     }
-    private  inner class RequirredCrimeHolder(view: View) : CrimeHolder(view){
+    private  inner class RequiredCrimeHolder(view: View) : CrimeHolder(view){
         private lateinit var crime: Crime
-        val requiredCrimeTextView: TextView = itemView.findViewById(R.id.requiredcrime_title)
-        val requireddateTextView: TextView = itemView.findViewById(R.id.requiredcrime_date)
+        val requiredCrimeTitle: TextView = itemView.findViewById(R.id.title_require)
+        val requiredCrimeDate: TextView = itemView.findViewById(R.id.date_require)
 
 
         override fun bind(crime: Crime) {
             this.crime = crime
 
-            requiredCrimeTextView.text = this.crime.title
-            requireddateTextView.text= DateFormat.getDateInstance(DateFormat.FULL).format(this.crime.date).toString()
+            requiredCrimeTitle.text = this.crime.title
+            requiredCrimeDate.text= DateFormat.getDateInstance(DateFormat.FULL).format(this.crime.date).toString()
         }
 
     }
@@ -99,7 +98,7 @@ class CrimeListFragment : Fragment() {
 
 
         override fun getItemViewType(position: Int): Int {
-            return if (crimes[position].Rpolice == true)
+            return if (crimes[position].requirePolice == true)
                 return EmergencyCrime
             else
                 return crime
@@ -115,12 +114,12 @@ class CrimeListFragment : Fragment() {
                 EmergencyCrime -> {
 
                     val view = layoutInflater.inflate(
-                        R.layout.list_item_police_required_crime,
+                        R.layout.list_item_required_crime,
                         parent,
                         false
                     )
 
-                    recyclerViewholder = RequirredCrimeHolder(view)
+                    recyclerViewholder = RequiredCrimeHolder(view)
                 }
                 else -> {
                     val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
@@ -141,7 +140,7 @@ class CrimeListFragment : Fragment() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
             val crime = crimes[position]
-            if (holder is RequirredCrimeHolder)
+            if (holder is RequiredCrimeHolder)
                 holder.bind(crime)
             else
                 if(holder is NormalCrimeHolder)

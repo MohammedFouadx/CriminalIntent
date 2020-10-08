@@ -11,10 +11,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val currentFragment= supportFragmentManager.findFragmentById(R.id.fragment_Container)
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_Container, CrimeListFragment())
-            .commit()
-
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_Container)
+        if (currentFragment == null) {
+            val newCrimeListFragment = CrimeListFragment.newInstance()
+            supportFragmentManager . beginTransaction ().add(R.id.fragment_Container, newCrimeListFragment)
+                .commit()
+        }
     }
 }
