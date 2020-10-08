@@ -98,7 +98,7 @@ class CrimeListFragment : Fragment() {
 
 
         override fun getItemViewType(position: Int): Int {
-            return if (crimes[position].requirePolice == true)
+            return if (crimes[position].requiredCrimePolice == true)
                 return EmergencyCrime
             else
                 return crime
@@ -113,10 +113,7 @@ class CrimeListFragment : Fragment() {
             when (viewType) {
                 EmergencyCrime -> {
 
-                    val view = layoutInflater.inflate(
-                        R.layout.list_item_required_crime,
-                        parent,
-                        false
+                    val view = layoutInflater.inflate(R.layout.list_item_required_crime, parent, false
                     )
 
                     recyclerViewholder = RequiredCrimeHolder(view)

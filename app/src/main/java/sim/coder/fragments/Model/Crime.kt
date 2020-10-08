@@ -9,7 +9,7 @@ data class Crime(
     //var detail:String="",
     var date: Date=Date(),
     var isSolved:Boolean=false,
-    var requirePolice:Boolean=false
+    var requiredCrimePolice:Boolean=false
 
 
 ) {
