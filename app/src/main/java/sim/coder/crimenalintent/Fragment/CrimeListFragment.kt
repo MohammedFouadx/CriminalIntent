@@ -1,5 +1,6 @@
 package sim.coder.crimenalintent.Fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,15 +12,24 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import sim.coder.crimenalintent.Model.Crime
 import sim.coder.crimenalintent.Model.CrimeListViewModel
 import sim.coder.crimenalintent.R
+import java.util.*
 
 private const val TAG = "CrimeListFragment"
 
 class CrimeListFragment : Fragment() {
+
+
+    interface CallBacks{
+        fun onItemSelected(crimeId:UUID)
+    }
+
+    private var callBack:CallBacks?=null
 
     private lateinit var crimeRecyclerView: RecyclerView
     //private var adapter: CrimeAdapter? = null
@@ -33,6 +43,16 @@ class CrimeListFragment : Fragment() {
 //        super.onCreate(savedInstanceState)
 //        Log.d(TAG, "Total crimes: ${crimeListViewModel.crimes.size}")
 //    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callBack=context as CallBacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callBack=null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,8 +113,15 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(v: View) {
-            Toast.makeText(context, "${crime.title} clicked!", Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(context, "${crime.title} clicked!", Toast.LENGTH_SHORT)
+//                .show()
+
+//            val fragment=CrimeFragment()
+//            val fm = activity?.supportFragmentManager
+//            fm?.beginTransaction()?.replace(R.id.fragment_container,fragment)
+//                ?.addToBackStack("")?.commit()
+
+            callBack?.onItemSelected(crime.id)
         }
     }
 
@@ -120,4 +147,29 @@ class CrimeListFragment : Fragment() {
             return CrimeListFragment()
         }
     }
+
+    class  CrimeList(
+        var oldList:List<Crime>,
+        var newList:List<Crime>
+
+
+    ): DiffUtil.Callback(){
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+
+        override fun getNewListSize(): Int {
+            return  newList.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return  (oldList.get(oldItemPosition).id==newList.get(newItemPosition).id)
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList.get(oldItemPosition).equals(newList.get(newItemPosition))
+        }
+
+    }
+
 }

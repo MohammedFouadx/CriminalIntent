@@ -11,3 +11,12 @@ data class Crime(
     var title: String = "",
     var date: Date = Date(),
     var isSolved: Boolean = false)
+
+{
+
+
+    override fun toString(): String {
+        return "Crime(id=$id,title=$title,date=$date,isSolved=$isSolved)"
+    }
+
+}

@@ -9,9 +9,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import sim.coder.crimenalintent.Model.Crime
+import sim.coder.crimenalintent.Model.CrimeDetailViewModel
 import sim.coder.crimenalintent.R
+import java.util.*
+import androidx.lifecycle.Observer
 
 class CrimeFragment : Fragment() {
 
@@ -20,9 +25,30 @@ class CrimeFragment : Fragment() {
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
 
+    private val crimeDetailViewModel:CrimeDetailViewModel by lazy {
+        ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
+        val id:UUID= arguments?.getSerializable("ARG_CRIME_ID") as UUID
+        crimeDetailViewModel.loadCrime(id)
+        //Toast.makeText(context,id.toString(),Toast.LENGTH_LONG).show()
+    }
+
+
+    companion object{
+        fun newInstance(crimeId:UUID):CrimeFragment{
+
+            val args = Bundle().apply {
+                putSerializable("ARG_CRIME_ID",crimeId)
+            }
+
+            return CrimeFragment().apply {
+                arguments=args
+            }
+        }
     }
 
     override fun onCreateView(
@@ -42,6 +68,30 @@ class CrimeFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        crimeDetailViewModel.crimeLiveData.observe(viewLifecycleOwner, Observer {
+            crime ->
+            crime?.let {crime ->
+                this.crime=crime
+                updateUI()
+            }
+        })
+
+
+    }
+
+    private fun updateUI() {
+        titleField.setText(crime.title)
+        dateButton.text = crime.date.toString()
+        //solvedCheckBox.isChecked = crime.isSolved
+        solvedCheckBox.apply {
+            isChecked = crime.isSolved
+            jumpDrawablesToCurrentState()
+        }
     }
 
     override fun onStart() {
@@ -79,5 +129,12 @@ class CrimeFragment : Fragment() {
                 crime.isSolved = isChecked
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        crimeDetailViewModel.saveCrime(crime)
+
+
     }
 }
