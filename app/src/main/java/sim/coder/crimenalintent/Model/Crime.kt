@@ -2,6 +2,7 @@ package sim.coder.crimenalintent.Model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.sql.Time
 import java.util.UUID
 import java.util.Date
 
@@ -12,6 +13,7 @@ data class Crime(
     var date: Date = Date(),
     var isSolved: Boolean = false)
 
+
 {
 
 
@@ -20,3 +22,7 @@ data class Crime(
     }
 
 }
+
+data class Time(
+    var time:Time
+)

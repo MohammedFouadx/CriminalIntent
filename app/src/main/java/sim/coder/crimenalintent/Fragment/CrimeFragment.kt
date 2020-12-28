@@ -1,5 +1,6 @@
 package sim.coder.crimenalintent.Fragment
 
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import sim.coder.crimenalintent.Model.Crime
@@ -17,13 +17,23 @@ import sim.coder.crimenalintent.Model.CrimeDetailViewModel
 import sim.coder.crimenalintent.R
 import java.util.*
 import androidx.lifecycle.Observer
+import sim.coder.crimenalintent.Model.Time
+import java.text.SimpleDateFormat
 
-class CrimeFragment : Fragment() {
+
+private const val DIALOG_DATE="DialogDate"
+private const val REQUEST_DATE=0
+
+
+class CrimeFragment : Fragment() , DatePickerFragment.Callbacks , TimePickerFragment.Callbacks {
+
+
 
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
+    private lateinit var timeButton:Button
 
     private val crimeDetailViewModel:CrimeDetailViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
@@ -61,11 +71,37 @@ class CrimeFragment : Fragment() {
         titleField = view.findViewById(R.id.crime_title) as EditText
         dateButton = view.findViewById(R.id.crime_date) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
+        timeButton= view.findViewById(R.id.crime_time) as Button
 
-        dateButton.apply {
-            text = crime.date.toString()
-            isEnabled = false
+
+        timeButton.setOnClickListener {
+            val calendar = Calendar.getInstance()
+
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                calendar.set(Calendar.MINUTE, minute)
+
+                timeButton.text = SimpleDateFormat("HH:mm").format(calendar.time)
+            }
+
+            TimePickerDialog(context, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE), true
+            ).show()
+
         }
+
+        dateButton.setOnClickListener {
+            DatePickerFragment.newInctance(crime.date).apply {
+                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
+                show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
+            }
+        }
+
+
+//        dateButton.apply {
+//            text = crime.date.toString()
+//            isEnabled = false
+//        }
 
         return view
     }
@@ -137,4 +173,15 @@ class CrimeFragment : Fragment() {
 
 
     }
+    override fun onDateSelected(date: Date) {
+        crime.date=date
+        updateUI()
+
+    }
+
+    override fun onTimeSelected(time: java.sql.Time) {
+        updateUI()
+    }
+
+
 }
