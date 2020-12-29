@@ -3,9 +3,7 @@ package sim.coder.crimenalintent.Fragment
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_crime_list.*
 import sim.coder.crimenalintent.Model.Crime
 import sim.coder.crimenalintent.Model.CrimeListViewModel
 import sim.coder.crimenalintent.R
@@ -39,10 +38,10 @@ class CrimeListFragment : Fragment() {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
     }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        Log.d(TAG, "Total crimes: ${crimeListViewModel.crimes.size}")
-//    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -80,6 +79,14 @@ class CrimeListFragment : Fragment() {
                     updateUI(crimes)
                 }
             })
+
+        add_new_crime.setOnClickListener {
+            val crime = Crime()
+            crimeListViewModel.addCrime(crime)
+            callBack?.onItemSelected(crime.id)
+            true
+        }
+
     }
 
 
@@ -96,6 +103,7 @@ class CrimeListFragment : Fragment() {
         private val titleTextView: TextView = itemView.findViewById(R.id.crime_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.crime_date)
         private val solvedImageView: ImageView = itemView.findViewById(R.id.crime_solved)
+
 
         init {
             itemView.setOnClickListener(this)
@@ -139,7 +147,20 @@ class CrimeListFragment : Fragment() {
             holder.bind(crime)
         }
 
-        override fun getItemCount() = crimes.size
+        override fun getItemCount() :Int{
+            if (crimes.size<=0){
+                text_no_crime.visibility=View.VISIBLE
+                add_new_crime.visibility=View.VISIBLE
+            }else{
+                text_no_crime.visibility=View.GONE
+                add_new_crime.visibility=View.GONE
+
+
+            }
+            return  crimes.size
+        }
+
+            //crimes.size
     }
 
     companion object {
@@ -159,6 +180,7 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun getNewListSize(): Int {
+
             return  newList.size
         }
 
@@ -171,5 +193,28 @@ class CrimeListFragment : Fragment() {
         }
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.fragment_crime_list,menu)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.new_crime -> {
+                val crime = Crime()
+                crimeListViewModel.addCrime(crime)
+                callBack?.onItemSelected(crime.id)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+
+
+    }
+
 
 }

@@ -17,7 +17,6 @@ import sim.coder.crimenalintent.Model.CrimeDetailViewModel
 import sim.coder.crimenalintent.R
 import java.util.*
 import androidx.lifecycle.Observer
-import sim.coder.crimenalintent.Model.Time
 import java.text.SimpleDateFormat
 
 
