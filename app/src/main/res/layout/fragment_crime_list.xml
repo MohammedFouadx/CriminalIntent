@@ -20,21 +20,34 @@
         android:orientation="vertical"
         android:gravity="center">
 
+
+        <ImageButton
+            android:id="@+id/add_new_crime"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/ic_add_circle_outline_24dp"
+            android:padding="5dp"/>
+
+
         <TextView
             android:id="@+id/text_no_crime"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:text="@string/text_no_crimes"
+            android:padding="5dp"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/text_add_one"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add_one"
+            android:gravity="center"
+            android:padding="5dp"
             android:textSize="26sp" />
 
 
 
-        <ImageButton
-            android:id="@+id/add_new_crime"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/addcrime"
-            android:padding="5dp"/>
 
 
     </LinearLayout>
