@@ -19,7 +19,7 @@ class CrimeRepository private constructor(context: Context) {
         DATABASE_NAME
     ).addMigrations(object  : Migration(1,2){
         override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE Crime ADD COLUMN suspect TEXT NOT NULL DEFAULT ''" )
+            database.execSQL("ALTER TABLE Crime ADD COLUMN suspectPhoneNumber TEXT NOT NULL DEFAULT ''" )
         }
 
     }).build()

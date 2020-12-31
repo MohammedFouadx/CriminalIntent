@@ -7,7 +7,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import sim.coder.crimenalintent.Model.Crime
 
-@Database(entities = [ Crime::class ], version=2,exportSchema = false)
+@Database(entities = [ Crime::class ], version=1,exportSchema = false)
 @TypeConverters(CrimeTypeConverters::class)
 abstract class CrimeDatabase : RoomDatabase() {
 
@@ -18,7 +18,7 @@ abstract class CrimeDatabase : RoomDatabase() {
     val migration_1_2= object :Migration(1,2){
         override fun migrate(database: SupportSQLiteDatabase) {
 
-            database.execSQL("ALTER TABLE Crime ADD COLUMN suspect TEXT NOT NULL DEFAULT ''")
+            database.execSQL("ALTER TABLE Crime ADD COLUMN suspectPhoneNumber TEXT NOT NULL DEFAULT ''")
 
         }
 

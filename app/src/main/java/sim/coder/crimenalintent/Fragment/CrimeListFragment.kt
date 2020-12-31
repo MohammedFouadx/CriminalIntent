@@ -150,9 +150,11 @@ class CrimeListFragment : Fragment() {
         override fun getItemCount() :Int{
             if (crimes.size<=0){
                 text_no_crime.visibility=View.VISIBLE
+                text_add_one.visibility=View.VISIBLE
                 add_new_crime.visibility=View.VISIBLE
             }else{
                 text_no_crime.visibility=View.GONE
+                text_add_one.visibility=View.GONE
                 add_new_crime.visibility=View.GONE
 
 
