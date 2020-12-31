@@ -120,7 +120,7 @@ class CrimeFragment : Fragment() , DatePickerFragment.Callbacks , TimePickerFrag
                 putExtra(Intent.EXTRA_TEXT, getCrimeReport())
                 putExtra(Intent.EXTRA_TITLE, crime.title)
             }.also {
-                val chooserIntent = Intent.createChooser(it, getString(R.string.crime_report_text))
+                val chooserIntent = Intent.createChooser(it, getString(R.string.send_report))
                 startActivity(chooserIntent)
             }
 
@@ -146,9 +146,9 @@ class CrimeFragment : Fragment() , DatePickerFragment.Callbacks , TimePickerFrag
 
         phoneNumberButton.apply {
             val num= "tel:${crime.suspectPhoneNumber}"
-            val callSuspectIntent = Intent(Intent.ACTION_DIAL,Uri.parse(num))
-                setOnClickListener {
-                   activity!!.startActivity(callSuspectIntent)
+            val numberSuspectIntent = Intent(Intent.ACTION_DIAL,Uri.parse(num))
+            setOnClickListener {
+                activity!!.startActivity(numberSuspectIntent)
                 }
             }
 
@@ -163,7 +163,7 @@ class CrimeFragment : Fragment() , DatePickerFragment.Callbacks , TimePickerFrag
             resultCode != Activity.RESULT_OK -> return
             requestCode == REQUEST_CONTACT && data != null -> {
                 val contactUri: Uri? = data.data
-                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME,
+                val queryFields = arrayOf(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER)
                 val cursor = requireActivity().contentResolver
                     .query(contactUri!!, queryFields, null, null, null)
