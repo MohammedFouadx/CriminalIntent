@@ -2,8 +2,11 @@ package sim.coder.crimenalintent.Fragment
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.widget.DatePicker
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import java.util.*
 
@@ -11,6 +14,7 @@ import java.util.*
 private  const val  ARG_DATE ="date"
 class DatePickerFragment:DialogFragment() {
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         //return super.onCreateDialog(savedInstanceState)
 
@@ -49,6 +53,8 @@ class DatePickerFragment:DialogFragment() {
     interface Callbacks{
         fun onDateSelected(date: Date)
     }
+
+
 
 
 }

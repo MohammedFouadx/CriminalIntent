@@ -19,6 +19,8 @@ data class Crime(
 
 {
 
+    val photoFileName
+        get() = "IMG_$id.jpg"
 
     override fun toString(): String {
         return "Crime(id=$id,title=$title,date=$date,isSolved=$isSolved)"
